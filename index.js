@@ -9,7 +9,10 @@ canvas.width = WIDTH;
 canvas.height = HEIGHT;
 var scene = new Scene(
     [
-
+        new Sphere(
+            new Vector(10, 10, 0),
+            2
+        )
     ],
     [
 
