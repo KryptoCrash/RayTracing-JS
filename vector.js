@@ -33,6 +33,9 @@ module.exports = class Vector {
         let div = (mag === 0) ? Infinity : 1.0 / mag
         return Vector.multiply(div, v1)
     }
+    static dot(v1, v2) {
+        return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+    }
     static cross(v1, v2) {
         return new Vector(
             v1.y * v2.z - v1.z * v2.y,
