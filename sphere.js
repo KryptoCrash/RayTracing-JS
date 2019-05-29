@@ -1,5 +1,5 @@
-var Vector = require('./vector.js')
-module.exports = class Sphere {
+import Vector from './vector.js'
+export default class Sphere {
     constructor(pos, radius) {
         this.pos = pos
         this.radius = radius
@@ -8,10 +8,11 @@ module.exports = class Sphere {
         let O = ray.origin
         let D = ray.dir
         let C = this.pos
+        let OC = Vector.subtract(O, C)
         let r = this.radius
         let a = Vector.dot(D, D)
-        let b = 2 * Vector.dot(D, O - C)
-        let c = Vector.dot(O - C, O - C) - r ** 2
+        let b = 2 * Vector.dot(D, OC)
+        let c = Vector.dot(OC, OC) - r ** 2
         let disc = b ** 2 - 4 * a * c
         if(disc < 0) {
             return {

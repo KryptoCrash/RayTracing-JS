@@ -1,7 +1,7 @@
-var Vector = require('./vector.js')
-var Ray = require('./ray.js')
-var Color = require('./color.js')
-module.exports = class RayTracer {
+import Vector from './vector.js'
+import Ray from './ray.js'
+import Color from './color.js'
+export default class RayTracer {
     constructor(scene, canvas) {
         this.scene = scene;
         this.camera = scene.camera;
@@ -12,7 +12,7 @@ module.exports = class RayTracer {
             for(let x = 0; x < this.canvas.width; x++) {
                 let pxColor = this.shootRay(
                     new Ray(this.camera.pos, this.getDir(x, y, this.camera)),
-                    scene,
+                    this.scene,
                     0
                 )
                 this.canvas.fillStyle = `rgb(${pxColor.red}, ${pxColor.green}, ${pxColor.blue})`
@@ -21,12 +21,14 @@ module.exports = class RayTracer {
         }
     }
     getDir(x, y, camera) {
+        var recenterX = x =>(x - (this.canvas.width / 2.0)) / 2.0 / this.canvas.width;
+        var recenterY = y => - (y - (this.canvas.height / 2.0)) / 2.0 / this.canvas.height;
         return Vector.norm(
             Vector.add(
                 camera.forward,
                 Vector.add(
-                    Vector.multiply(x * camera.w, camera.right),
-                    Vector.multiply(y * camera.h, camera.up)
+                    Vector.multiply(recenterX(x), camera.right),
+                    Vector.multiply(recenterY(y), camera.up)
                 )
             )
         )
@@ -40,7 +42,7 @@ module.exports = class RayTracer {
         let closestDist = Infinity;
         scene.objects.forEach(obj => {
             let inter = obj.intersect(ray)
-            if(inter && inter.dist < closestDist) {
+            if(inter.dist != Infinity && inter.dist < closestDist) {
                 closestInter = inter
                 closestDist = inter.dist
             }

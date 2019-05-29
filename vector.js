@@ -1,4 +1,4 @@
-module.exports = class Vector {
+export default class Vector {
     constructor(x, y, z) {
         this.x = x;
         this.y = y;
@@ -13,16 +13,16 @@ module.exports = class Vector {
     }
     static subtract(v1, v2) {
         return new Vector(
-            v1.x+v2.x,
-            v1.y+v2.y,
-            v1.z+v2.z,
+            v1.x-v2.x,
+            v1.y-v2.y,
+            v1.z-v2.z,
         )
     }
     static multiply(s, v1) {
         return new Vector(
             v1.x*s,
-            v1.y+s,
-            v1.z+s,
+            v1.y*s,
+            v1.z*s,
         )
     }
     static mag(v1) {

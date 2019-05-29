@@ -1,25 +1,26 @@
-var WIDTH = 400;
-var HEIGHT = 300;
-var canvas = document.getElementById('ctx');
-var RayTracer = require('./raytracer.js')
-var Scene = require('./scene.js')
-var Camera = require('./camera.js')
-var Vector = require('./vector.js')
-canvas.width = WIDTH;
-canvas.height = HEIGHT;
+var WIDTH = 256;
+var HEIGHT = 256;
+var canvas = document.getElementById("ctx").getContext('2d');
+canvas.width = 256;
+canvas.height = 256;
+import RayTracer from './raytracer.js'
+import Scene from './scene.js'
+import Camera from './camera.js'
+import Vector from './vector.js'
+import Sphere from './sphere.js'
 var scene = new Scene(
     [
         new Sphere(
-            new Vector(10, 10, 0),
-            2
+            new Vector(0, 1, -0.25),
+            1.0
         )
     ],
     [
 
     ],
     new Camera(
-        new Vector(0,0,0),
-        new Vector(1, 1, 0),
+        new Vector(3, 2, 4),
+        new Vector(-1, 0.5, 0),
         60,
         WIDTH / HEIGHT
     )
