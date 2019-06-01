@@ -1,6 +1,8 @@
 import Vector from './vector.js'
 import Ray from './ray.js'
 import Color from './color.js'
+import Sphere from './sphere.js'
+import Plane from './plane.js'
 export default class RayTracer {
     constructor(scene, canvas) {
         this.scene = scene;
@@ -21,21 +23,43 @@ export default class RayTracer {
         }
     }
     getDir(x, y, camera) {
-        var recenterX = x =>(x - (this.canvas.width / 2.0)) / 2.0 / this.canvas.width;
-        var recenterY = y => - (y - (this.canvas.height / 2.0)) / 2.0 / this.canvas.height;
+        let xx = (2 * ((x + 0.5) * (1 / this.canvas.width)) - 1) * camera.angle * camera.aspectRatio; 
+        let yy = (1 - 2 * ((y + 0.5) * (1 / this.canvas.height))) * camera.angle;
         return Vector.norm(
             Vector.add(
                 camera.forward,
                 Vector.add(
-                    Vector.multiply(recenterX(x), camera.right),
-                    Vector.multiply(recenterY(y), camera.up)
+                    Vector.multiply(xx, camera.right),
+                    Vector.multiply(yy, camera.up)
                 )
             )
         )
     }
     shootRay(ray, scene, iter) {
         let inter = this.checkForIntersect(ray, scene)
-        return inter ? new Color(255, 0, 0) : new Color(0, 0, 0)
+        if(inter) {
+            if(inter.obj instanceof Sphere) {
+            let pI = Vector.add(ray.origin, Vector.multiply(inter.dist, ray.dir))
+            let sNormal = Vector.norm(Vector.subtract(pI, inter.obj.pos))
+            let cVector = Vector.multiply(
+                Vector.dot(
+                    Vector.subtract(new Vector(0, 0, 0), ray.dir),
+                    sNormal
+                ),
+                inter.obj.color
+            )
+            return new Color(cVector.x, cVector.y, cVector.z)
+            } else if(inter.obj instanceof Plane) {
+                let cVector = Vector.multiply(
+                    Vector.dot(
+                        Vector.subtract(new Vector(0, 0, 0), ray.dir),
+                        inter.obj.normal
+                    ),
+                    inter.obj.color
+                )
+                return new Color(cVector.x, cVector.y, cVector.z)
+            }
+        } else return new Color(0, 0, 0)
     }
     checkForIntersect(ray, scene) {
         let closestInter = undefined;

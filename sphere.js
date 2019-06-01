@@ -1,8 +1,9 @@
 import Vector from './vector.js'
 export default class Sphere {
-    constructor(pos, radius) {
+    constructor(pos, radius, color) {
         this.pos = pos
         this.radius = radius
+        this.color = color
     }
     intersect(ray) {
         let O = ray.origin
