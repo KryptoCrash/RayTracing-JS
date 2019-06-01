@@ -1,4 +1,4 @@
-import Vector from './vector.js'
+import Vector from '../Vectors/vector.js'
 export default class Camera {
     constructor(pos, facing, fov, aspectRatio) {
         this.pos = pos;

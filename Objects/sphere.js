@@ -1,4 +1,4 @@
-import Vector from './vector.js'
+import Vector from '../Vectors/vector.js'
 export default class Sphere {
     constructor(pos, radius, color) {
         this.pos = pos

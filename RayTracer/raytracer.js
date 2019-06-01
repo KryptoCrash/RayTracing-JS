@@ -1,8 +1,8 @@
-import Vector from './vector.js'
+import Vector from '../Vectors/vector.js'
 import Ray from './ray.js'
-import Color from './color.js'
-import Sphere from './sphere.js'
-import Plane from './plane.js'
+import Color from '../Vectors/color.js'
+import Sphere from '../Objects/sphere.js'
+import Plane from '../Objects/plane.js'
 export default class RayTracer {
     constructor(scene, canvas) {
         this.scene = scene;

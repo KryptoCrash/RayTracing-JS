@@ -6,12 +6,12 @@ c.height = HEIGHT
 var canvas = c.getContext('2d');
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
-import RayTracer from './raytracer.js'
-import Scene from './scene.js'
-import Camera from './camera.js'
-import Vector from './vector.js'
-import Sphere from './sphere.js'
-import Plane from './plane.js';
+import RayTracer from './RayTracer/raytracer.js'
+import Scene from './Scene/scene.js'
+import Camera from './Scene/camera.js'
+import Vector from './Vectors/vector.js'
+import Sphere from './Objects/sphere.js'
+import Plane from './Objects/plane.js';
 var scene = new Scene(
     [
         new Plane(

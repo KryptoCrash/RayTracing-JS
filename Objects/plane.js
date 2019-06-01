@@ -1,4 +1,4 @@
-import Vector from './vector.js'
+import Vector from '../Vectors/vector.js'
 export default class Plane {
     constructor(n, color) {
         this.normal = Vector.norm(n)
