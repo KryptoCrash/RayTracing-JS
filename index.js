@@ -20,8 +20,23 @@ var scene = new Scene(
         ),
         new Sphere(
             new Vector(0, 1, -0.25),
-            1.0,
+            1.2,
             new Vector(255, 0, 0)
+        ),
+        new Sphere(
+            new Vector(0, 2.8, 0.25),
+            0.5,
+            new Vector(255, 255, 0)
+        ),
+		new Sphere(
+            new Vector(0.5, 1.8, 2),
+            0.25,
+            new Vector(0, 0, 255)
+        ),
+		new Sphere(
+            new Vector(0.5, 2.2, 2),
+            0.1,
+            new Vector(0, 255, 255)
         ),
         new Sphere(
             new Vector(0.5, 1, 2),
@@ -30,7 +45,7 @@ var scene = new Scene(
         )
     ],
     [
-
+		new PointLight(new Vector(0,12,0))
     ],
     new Camera(
         new Vector(3, 2, 4),
