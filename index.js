@@ -12,6 +12,7 @@ import Camera from './Scene/camera.js'
 import Vector from './Vectors/vector.js'
 import Sphere from './Objects/sphere.js'
 import Plane from './Objects/plane.js';
+import PointLight from './Objects/light.js';
 var scene = new Scene(
     [
         new Plane(
