@@ -41,7 +41,7 @@ export default class RayTracer {
             if(inter.obj instanceof Sphere) {
             let pI = Vector.add(ray.origin, Vector.multiply(inter.dist, ray.dir))
             let sNormal = Vector.norm(Vector.subtract(pI, inter.obj.pos))
-			
+            
             let cVector = Vector.multiply(
                 Vector.dot(
                     Vector.subtract(new Vector(0, 0, 0), ray.dir),
@@ -62,18 +62,17 @@ export default class RayTracer {
             }
         } else return new Color(0, 0, 0)
     }
-	brightness(pos,scene) {
-		var sum=0.5;
-		for (var i in scene.lights) {
-			if (this.isLightVisible(pos,scene,scene.lights[i].pos)) sum=1;
-		}
-		return sum;
-	}
-	isLightVisible(pt, scene, pos) {
-		return this.isLit(
-			new Ray(Vector.add(pt,Vector.multiply(1e-10,Vector.norm(Vector.subtract(pos, pt)))),Vector.norm(Vector.subtract(pos,pt)))
-		, scene)
-	}
+    brightness(pos,scene) {
+        var brightness=0.2;
+        for (var i in scene.lights) {
+            var lightpos=scene.lights[i].pos
+            if (this.isLit(
+                new Ray(Vector.add(pos,
+                    Vector.multiply(1e-10,Vector.norm(Vector.subtract(lightpos, pos)))), // add bias
+                    Vector.norm(Vector.subtract(lightpos,pos))), scene)) brightness+=0.4;
+        }
+        return brightness;
+    }
     checkForIntersect(ray, scene) {
         let closestInter = undefined;
         let closestDist = Infinity;
@@ -86,14 +85,14 @@ export default class RayTracer {
         });
         return closestInter
     }
-	
-    isLit(ray, scene) {
+    
+    isLit(ray, scene) { // ray pointing to light
         for (var i in scene.objects) {
-			let o = scene.objects[i]
-			if (o instanceof Sphere) {
-				if (Vector.mag(Vector.subtract(o.pos,ray.origin))<o.radius) return false
-			}
-		}
-		return typeof this.checkForIntersect(ray,scene)==="undefined"
+            let object = scene.objects[i]
+            if (object instanceof Sphere) {
+                if (Vector.mag(Vector.subtract(object.pos,ray.origin))<object.radius) return false
+            }
+        }
+        return typeof this.checkForIntersect(ray,scene)==="undefined"
     }
 }
