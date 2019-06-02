@@ -41,11 +41,12 @@ export default class RayTracer {
             if(inter.obj instanceof Sphere) {
             let pI = Vector.add(ray.origin, Vector.multiply(inter.dist, ray.dir))
             let sNormal = Vector.norm(Vector.subtract(pI, inter.obj.pos))
+			
             let cVector = Vector.multiply(
                 Vector.dot(
                     Vector.subtract(new Vector(0, 0, 0), ray.dir),
                     sNormal
-                ),
+                )*this.brightness(Vector.add(Vector.multiply(inter.dist,ray.dir),ray.origin),scene),
                 inter.obj.color
             )
             return new Color(cVector.x, cVector.y, cVector.z)
@@ -54,23 +55,45 @@ export default class RayTracer {
                     Vector.dot(
                         Vector.subtract(new Vector(0, 0, 0), ray.dir),
                         inter.obj.normal
-                    ),
+                    )*this.brightness(Vector.add(Vector.multiply(inter.dist,ray.dir),ray.origin),scene),
                     inter.obj.color
                 )
                 return new Color(cVector.x, cVector.y, cVector.z)
             }
         } else return new Color(0, 0, 0)
     }
+	brightness(pos,scene) {
+		var sum=0.5;
+		for (var i in scene.lights) {
+			if (this.isLightVisible(pos,scene,scene.lights[i].pos)) sum=1;
+		}
+		return sum;
+	}
+	isLightVisible(pt, scene, pos) {
+		return this.isLit(
+			new Ray(Vector.add(pt,Vector.multiply(1e-10,Vector.norm(Vector.subtract(pos, pt)))),Vector.norm(Vector.subtract(pos,pt)))
+		, scene)
+	}
     checkForIntersect(ray, scene) {
         let closestInter = undefined;
         let closestDist = Infinity;
         scene.objects.forEach(obj => {
             let inter = obj.intersect(ray)
-            if(inter.dist != Infinity && inter.dist < closestDist) {
+            if(inter.dist != Infinity && inter.dist > 0 && inter.dist < closestDist) {
                 closestInter = inter
                 closestDist = inter.dist
             }
         });
         return closestInter
+    }
+	
+    isLit(ray, scene) {
+        for (var i in scene.objects) {
+			let o = scene.objects[i]
+			if (o instanceof Sphere) {
+				if (Vector.mag(Vector.subtract(o.pos,ray.origin))<o.radius) return false
+			}
+		}
+		return typeof this.checkForIntersect(ray,scene)==="undefined"
     }
 }
