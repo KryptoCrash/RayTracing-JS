@@ -39,11 +39,14 @@ export default class RayTracer {
         let inter = this.checkForIntersect(ray, scene)
         if(inter) {
             if(inter.obj instanceof Sphere) {
+            let pI = Vector.add(ray.origin, Vector.multiply(inter.dist, ray.dir))
+            let sNormal = Vector.norm(Vector.subtract(pI, inter.obj.pos))
+            
             let cVector = Vector.multiply(
                 Vector.dot(
                     Vector.subtract(new Vector(0, 0, 0), ray.dir),
-                    inter.normal
-                )*this.brightness(inter.pos,scene),
+                    sNormal
+                )*this.brightness(Vector.add(Vector.multiply(inter.dist,ray.dir),ray.origin),scene),
                 inter.obj.color
             )
             return new Color(cVector.x, cVector.y, cVector.z)
@@ -52,7 +55,7 @@ export default class RayTracer {
                     Vector.dot(
                         Vector.subtract(new Vector(0, 0, 0), ray.dir),
                         inter.obj.normal
-                    )*this.brightness(inter.pos,scene),
+                    )*this.brightness(Vector.add(Vector.multiply(inter.dist,ray.dir),ray.origin),scene),
                     inter.obj.color
                 )
                 return new Color(cVector.x, cVector.y, cVector.z)
@@ -80,7 +83,6 @@ export default class RayTracer {
                 closestDist = inter.dist
             }
         });
-        
         return closestInter
     }
     

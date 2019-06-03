@@ -16,21 +16,16 @@ export default class Sphere {
         let c = Vector.dot(OC, OC) - r ** 2
         let disc = b ** 2 - 4 * a * c
         if(disc < 0) {
-            var inter = {
+            return {
                 obj: this,
                 ray: ray,
                 dist: Infinity
             }
-        } else {
-            var inter = {
-                obj: this,
-                ray: ray,
-                dist: (-b - Math.sqrt(disc)) / 2 * a
-            }
         }
-        
-        inter.pos = Vector.add(Vector.multiply(inter.dist,ray.dir),ray.origin)
-        inter.normal = Vector.norm(Vector.subtract(inter.pos, inter.obj.pos))
-        return inter;
+        return {
+            obj: this,
+            ray: ray,
+            dist: (-b - Math.sqrt(disc)) / 2 * a
+        }
     }
 }

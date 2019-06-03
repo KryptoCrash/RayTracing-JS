@@ -5,15 +5,10 @@ export default class Plane {
         this.color = color
     }
     intersect(ray) {
-        var denom = Vector.dot(this.normal, ray.dir)
-        var inter = {
+        return {
             obj: this,
             ray: ray,
-            dist: -(Vector.dot(ray.origin, this.normal)) / denom
+            dist: -(Vector.dot(ray.origin, this.normal)) / Vector.dot(ray.dir, this.normal)
         }
-        inter.pos = Vector.add(Vector.multiply(inter.dist,ray.dir),ray.origin)
-        inter.normal = this.normal
-        if (denom > 0) inter.normal = Vector.multiply(-1,inter.normal)
-        return inter
     }
 }
