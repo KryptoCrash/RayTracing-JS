@@ -38,39 +38,45 @@ export default class RayTracer {
     shootRay(ray, scene, iter) {
         let inter = this.checkForIntersect(ray, scene)
         if(inter) {
-            if(inter.obj instanceof Sphere) {
-            let pI = Vector.add(ray.origin, Vector.multiply(inter.dist, ray.dir))
-            let sNormal = Vector.norm(Vector.subtract(pI, inter.obj.pos))
-            let cVector = Vector.multiply(
-                Vector.dot(
-                    Vector.subtract(new Vector(0, 0, 0), ray.dir),
-                    sNormal
-                ),
-                inter.obj.color
-            )
-            return new Color(cVector.x, cVector.y, cVector.z)
-            } else if(inter.obj instanceof Plane) {
-                let cVector = Vector.multiply(
-                    Vector.dot(
-                        Vector.subtract(new Vector(0, 0, 0), ray.dir),
-                        inter.obj.normal
-                    ),
-                    inter.obj.color
-                )
-                return new Color(cVector.x, cVector.y, cVector.z)
-            }
+            return this.shade(ray, inter, scene)
         } else return new Color(0, 0, 0)
+    }
+    shade(ray, inter, scene) {
+        let intersectPoint = inter.intersectPoint
+        let hitNormal = inter.hitNormal
+        let surfaceType = inter.obj.surfaceType
+        if(this.inShadow(intersectPoint, scene.lights[0], scene)) return new Color(10, 10, 10)
+        if(surfaceType == 'diffuse') {
+            let albedo = inter.obj.albedo
+            let color = inter.obj.color
+            let lightDir = Vector.subtract(scene.lights[0].pos, intersectPoint)
+            let facingRatio = Vector.dot(hitNormal, lightDir)
+            let hitColor = Vector.multiply(
+                (albedo / Math.PI) * Math.cos(facingRatio) * scene.lights[0].intensity,
+                color
+            )
+            return hitColor.toColor()
+        }
+    }
+    inShadow(intersectPoint, light, scene) {
+        let shadowRay = new Ray(intersectPoint, Vector.subtract(light.pos, intersectPoint))
+        scene.objects.forEach(obj => {
+            let isect = obj.intersect(shadowRay)
+            if(isect.dist > 0 && isect.dist != Infinity) return true
+        })
+        return false
     }
     checkForIntersect(ray, scene) {
         let closestInter = undefined;
         let closestDist = Infinity;
         scene.objects.forEach(obj => {
             let inter = obj.intersect(ray)
-            if(inter.dist != Infinity && inter.dist < closestDist) {
+            if(inter.dist != Infinity && inter.dist > 0 && inter.dist < closestDist) {
                 closestInter = inter
                 closestDist = inter.dist
             }
         });
+        
         return closestInter
     }
 }

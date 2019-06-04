@@ -1,8 +1,24 @@
+import Color from "./color.js";
+
 export default class Vector {
     constructor(x, y, z) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+    neg() {
+        return new Vector(
+            -this.x,
+            -this.y,
+            -this.z
+        )
+    }
+    toColor() {
+        return new Color(
+            this.x,
+            this.y,
+            this.z
+        )
     }
     static add(v1, v2) {
         return new Vector(

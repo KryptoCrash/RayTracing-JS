@@ -1,9 +1,11 @@
 import Vector from '../Vectors/vector.js'
 export default class Sphere {
-    constructor(pos, radius, color) {
+    constructor(pos, radius, color, surfaceType, albedo) {
         this.pos = pos
         this.radius = radius
         this.color = color
+        this.surfaceType = surfaceType
+        this.albedo = albedo
     }
     intersect(ray) {
         let O = ray.origin
@@ -22,10 +24,15 @@ export default class Sphere {
                 dist: Infinity
             }
         }
+        let dist = (-b - Math.sqrt(disc)) / 2 * a
+        let intersectPoint = Vector.add(ray.origin, Vector.multiply(dist, ray.dir))
+        let hitNormal = Vector.norm( Vector.subtract(intersectPoint, this.pos) )
         return {
             obj: this,
             ray: ray,
-            dist: (-b - Math.sqrt(disc)) / 2 * a
+            dist: dist,
+            intersectPoint: intersectPoint,
+            hitNormal: hitNormal
         }
     }
 }

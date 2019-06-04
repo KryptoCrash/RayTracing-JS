@@ -11,26 +11,31 @@ import Scene from './Scene/scene.js'
 import Camera from './Scene/camera.js'
 import Vector from './Vectors/vector.js'
 import Sphere from './Objects/sphere.js'
-import Plane from './Objects/plane.js';
+import Plane from './Objects/plane.js'
+import PointLight from './Objects/Light/pointlight.js'
+import Color from './Vectors/color.js';
 var scene = new Scene(
     [
         new Plane(
             new Vector(0, 1, 0),
-            new Vector(255, 255, 255)
+            new Vector(255, 255, 255),
+            'diffuse',
+            1
         ),
         new Sphere(
             new Vector(0, 1, -0.25),
             1.0,
-            new Vector(255, 0, 0)
-        ),
-        new Sphere(
-            new Vector(0.5, 1, 2),
-            0.5,
-            new Vector(0, 255, 0)
+            new Vector(147, 58, 22),
+            'diffuse',
+            0.4
         )
     ],
     [
-
+        new PointLight(
+            new Vector(3, 5, 8),
+            6,
+            new Color(255, 255, 255)
+        )
     ],
     new Camera(
         new Vector(3, 2, 4),
