@@ -45,25 +45,27 @@ export default class RayTracer {
         let intersectPoint = inter.intersectPoint
         let hitNormal = inter.hitNormal
         let surfaceType = inter.obj.surfaceType
-        if(this.inShadow(intersectPoint, scene.lights[0], scene)) return new Color(10, 10, 10)
-        if(surfaceType == 'diffuse') {
+        if(this.inShadow(intersectPoint, scene.lights[0], scene)) {
+            return new Color(0, 0, 0)
+        } else if(surfaceType == 'diffuse') {
             let albedo = inter.obj.albedo
             let color = inter.obj.color
-            let lightDir = Vector.subtract(scene.lights[0].pos, intersectPoint)
+            let lightDir = Vector.norm(Vector.subtract(scene.lights[0].pos, intersectPoint))
             let facingRatio = Vector.dot(hitNormal, lightDir)
             let hitColor = Vector.multiply(
-                (albedo / Math.PI) * Math.cos(facingRatio) * scene.lights[0].intensity,
+                (albedo / Math.PI) * facingRatio * scene.lights[0].intensity,
                 color
             )
             return hitColor.toColor()
         }
     }
     inShadow(intersectPoint, light, scene) {
-        let shadowRay = new Ray(intersectPoint, Vector.subtract(light.pos, intersectPoint))
-        scene.objects.forEach(obj => {
+        let shadowRay = new Ray(intersectPoint, Vector.norm(Vector.subtract(light.pos, intersectPoint)))
+        for(let i = 0; i < scene.objects.length; i++) {
+            let obj = scene.objects[i]
             let isect = obj.intersect(shadowRay)
             if(isect.dist > 0 && isect.dist != Infinity) return true
-        })
+        }
         return false
     }
     checkForIntersect(ray, scene) {

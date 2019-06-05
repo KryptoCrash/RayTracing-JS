@@ -23,16 +23,23 @@ var scene = new Scene(
             1
         ),
         new Sphere(
-            new Vector(0, 1, -0.25),
+            new Vector(0, 2, -0.25),
             1.0,
             new Vector(147, 58, 22),
+            'diffuse',
+            0.4
+        ),
+        new Sphere(
+            new Vector(0, 2, 1.25),
+            1.0,
+            new Vector(147, 148, 22),
             'diffuse',
             0.4
         )
     ],
     [
         new PointLight(
-            new Vector(3, 5, 8),
+            new Vector(3, 8, 1),
             6,
             new Color(255, 255, 255)
         )
