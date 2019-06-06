@@ -20,29 +20,49 @@ var scene = new Scene(
             new Vector(0, 1, 0),
             new Vector(255, 255, 255),
             'diffuse',
-            1
+            0.18
         ),
         new Sphere(
-            new Vector(0, 2, -0.25),
+            new Vector(0, 1, -0.25),
             1.0,
             new Vector(147, 58, 22),
             'diffuse',
-            0.4
+            0.6
         ),
         new Sphere(
-            new Vector(0, 2, 1.25),
-            1.0,
-            new Vector(147, 148, 22),
+            new Vector(0.5, 1.5, 2),
+            0.5,
+            new Vector(0, 255, 0),
             'diffuse',
-            0.4
+            0.6
+        ),
+        new Sphere(
+            new Vector(0, 3, -0.25),
+            0.5,
+            new Vector(200, 122, 244),
+            'diffuse',
+            0.6
+        ),
+        new Sphere(
+            new Vector(2, 1, -2.5),
+            0.5,
+            new Vector(0, 122, 244),
+            'diffuse',
+            0.6
         )
     ],
     [
         new PointLight(
-            new Vector(3, 8, 1),
+            new Vector(3, 6, 8),
             6,
-            new Color(255, 255, 255)
-        )
+            new Vector(255, 234, 170)
+        ),
+        new PointLight(
+            new Vector(0, 6, -8),
+            6,
+            new Vector(230, 230, 255)
+        ),
+        
     ],
     new Camera(
         new Vector(3, 2, 4),
