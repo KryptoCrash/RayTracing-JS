@@ -9,12 +9,13 @@ export default class Plane {
     intersect(ray) {
         let dist = -(Vector.dot(ray.origin, this.normal)) / Vector.dot(ray.dir, this.normal)
         let intersectPoint = Vector.add(ray.origin, Vector.multiply(dist, ray.dir))
+        let normal = this.normal
         return {
             obj: this,
             ray: ray,
             dist: dist,
             intersectPoint: intersectPoint,
-            hitNormal: this.normal
+            hitNormal: normal
         }
     }
 }
