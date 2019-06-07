@@ -1,6 +1,5 @@
 import Vector from '../Vectors/vector.js'
 import Ray from './ray.js'
-import Color from '../Vectors/color.js'
 import Sphere from '../Objects/sphere.js'
 import Plane from '../Objects/plane.js'
 export default class RayTracer {
@@ -17,7 +16,7 @@ export default class RayTracer {
                     this.scene,
                     0
                 )
-                this.canvas.fillStyle = `rgb(${pxColor.red}, ${pxColor.green}, ${pxColor.blue})`
+                this.canvas.fillStyle = `rgb(${pxColor.x}, ${pxColor.y}, ${pxColor.z})`
                 this.canvas.fillRect(x, y, x + 1, y + 1)
             }
         }
@@ -39,7 +38,7 @@ export default class RayTracer {
         let inter = this.checkForIntersect(ray, scene)
         if(inter) {
             return this.shade(ray, inter, scene)
-        } else return new Color(0, 0, 0)
+        } else return new Vector(0, 0, 0)
     }
     shade(ray, inter, scene) {
         let intersectPoint = inter.intersectPoint
@@ -50,14 +49,14 @@ export default class RayTracer {
             let color = inter.obj.color
             let hitColor = new Vector(0, 0, 0)
             scene.lights.forEach(light => {
-                let lightDir = Vector.norm(Vector.subtract(light.pos, intersectPoint))
+                let lightDir = light.dir || Vector.norm(Vector.subtract(light.pos, intersectPoint))
                 let facingRatio = Vector.dot(hitNormal, lightDir) >= 0.02 ? Vector.dot(hitNormal, lightDir) : 0.02
                 hitColor = Vector.add(hitColor, Vector.multiply(
                 ((albedo / Math.PI) * facingRatio * light.intensity)*this.inShadow(intersectPoint, light, scene, inter.obj),
                 Vector.multiplyVectors(color, light.color.fromRGB())
                 ))
             })
-            return hitColor.toColor()
+            return hitColor
         } else if(surfaceType == 'specular') {
             let hitColor = new Vector(0, 0, 0)
             let lightDir = Vector.norm(Vector.subtract(scene.lights[0].pos, intersectPoint))
@@ -67,7 +66,8 @@ export default class RayTracer {
         } // <-- BUGGED
     }
     inShadow(intersectPoint, light, scene, objI) {
-        let shadowRay = new Ray(intersectPoint, Vector.norm(Vector.subtract(light.pos, intersectPoint)))
+        let lightDir = light.dir || Vector.norm(Vector.subtract(light.pos, intersectPoint))
+        let shadowRay = new Ray(intersectPoint, lightDir)
         for(let i = 0; i < scene.objects.length; i++) {
             let obj = scene.objects[i]
             let isect = obj.intersect(shadowRay)
