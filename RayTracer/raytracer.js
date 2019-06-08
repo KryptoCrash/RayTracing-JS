@@ -2,6 +2,9 @@ import Vector from '../Vectors/vector.js'
 import Ray from './ray.js'
 import Sphere from '../Objects/sphere.js'
 import Plane from '../Objects/plane.js'
+
+const bias = 1e-6; // set to whatever
+
 export default class RayTracer {
     constructor(scene, canvas) {
         this.scene = scene;

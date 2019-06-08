@@ -48,7 +48,7 @@ var scene = new Scene(
             new Vector(2, 1, -2.5),
             0.5,
             new Vector(0, 122, 244),
-            'diffuse',
+            'specular',
             0.6
         )
     ],
