@@ -1,5 +1,3 @@
-import Color from "./color.js";
-
 export default class Vector {
     constructor(x, y, z) {
         this.x = x;
@@ -11,13 +9,6 @@ export default class Vector {
             -this.x,
             -this.y,
             -this.z
-        )
-    }
-    toColor() {
-        return new Color(
-            this.x,
-            this.y,
-            this.z
         )
     }
     fromRGB() {
