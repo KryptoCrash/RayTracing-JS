@@ -26,7 +26,7 @@ var scene = new Scene(
             new Vector(0, 1, -0.25),
             1.0,
             new Vector(147, 58, 22),
-            'diffuse',
+            'specular',
             0.6
         ),
         new Sphere(
@@ -47,7 +47,7 @@ var scene = new Scene(
             new Vector(2, 1, -2.5),
             0.5,
             new Vector(0, 122, 244),
-            'diffuse',
+            'specular',
             0.6
         )
     ],

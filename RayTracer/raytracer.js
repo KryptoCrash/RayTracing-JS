@@ -2,6 +2,9 @@ import Vector from '../Vectors/vector.js'
 import Ray from './ray.js'
 import Sphere from '../Objects/sphere.js'
 import Plane from '../Objects/plane.js'
+
+const bias = 1e-6; // set to whatever
+
 export default class RayTracer {
     constructor(scene, canvas) {
         this.scene = scene;
@@ -59,8 +62,9 @@ export default class RayTracer {
             return hitColor
         } else if(surfaceType == 'specular') {
             let hitColor = new Vector(0, 0, 0)
-            let lightDir = Vector.norm(Vector.subtract(scene.lights[0].pos, intersectPoint))
-            let reflectRay = new Ray(intersectPoint, Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Math.cos(Vector.dot(hitNormal, lightDir)), hitNormal))))
+            let lightDir = Vector.norm(Vector.subtract(intersectPoint, scene.lights[0].pos))
+            let reflectDir = Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Vector.dot(hitNormal, lightDir), hitNormal)))
+            let reflectRay = new Ray(Vector.add(intersectPoint, Vector.multiply(bias,reflectDir)),reflectDir )
             hitColor = this.shootRay(reflectRay, scene, 0)
             return hitColor
         } // <-- BUGGED
