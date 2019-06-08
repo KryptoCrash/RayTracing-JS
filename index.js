@@ -12,6 +12,7 @@ import Camera from './Scene/camera.js'
 import Vector from './Vectors/vector.js'
 import Sphere from './Objects/sphere.js'
 import Plane from './Objects/plane.js'
+import Material from './Materials/material.js'
 import PointLight from './Objects/Light/pointlight.js'
 import DirLight from './Objects/Light/directionallight.js'
 var scene = new Scene(
@@ -26,7 +27,7 @@ var scene = new Scene(
             new Vector(0, 1, -0.25),
             1.0,
             new Vector(147, 58, 22),
-            'diffuse',
+            'specular',
             0.6
         ),
         new Sphere(

@@ -52,18 +52,18 @@ export default class RayTracer {
                 let lightDir = light.dir || Vector.norm(Vector.subtract(light.pos, intersectPoint))
                 let facingRatio = Vector.dot(hitNormal, lightDir) >= 0.02 ? Vector.dot(hitNormal, lightDir) : 0.02
                 hitColor = Vector.add(hitColor, Vector.multiply(
-                ((albedo / Math.PI) * facingRatio * light.intensity)*this.inShadow(intersectPoint, light, scene, inter.obj),
+                ((albedo / Math.PI) * facingRatio * light.intensity) * this.inShadow(intersectPoint, light, scene, inter.obj),
                 Vector.multiplyVectors(color, light.color.fromRGB())
                 ))
             })
             return hitColor
         } else if(surfaceType == 'specular') {
             let hitColor = new Vector(0, 0, 0)
-            let lightDir = Vector.norm(Vector.subtract(scene.lights[0].pos, intersectPoint))
-            let reflectRay = new Ray(intersectPoint, Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Math.cos(Vector.dot(hitNormal, lightDir)), hitNormal))))
+            let reflectDir = Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Vector.dot(hitNormal, inter.ray.dir), hitNormal)))
+            let reflectRay = new Ray(intersectPoint, reflectDir)
             hitColor = this.shootRay(reflectRay, scene, 0)
             return hitColor
-        } // <-- BUGGED
+        }
     }
     inShadow(intersectPoint, light, scene, objI) {
         let lightDir = light.dir || Vector.norm(Vector.subtract(light.pos, intersectPoint))
