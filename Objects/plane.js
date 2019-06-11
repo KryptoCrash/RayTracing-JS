@@ -1,10 +1,11 @@
 import Vector from '../Vectors/vector.js'
 export default class Plane {
-    constructor(n, color, surfaceType, albedo) {
+    constructor(n, color, surfaceType, albedo, material) {
         this.normal = Vector.norm(n)
         this.color = color
         this.surfaceType = surfaceType;
         this.albedo = albedo;
+        this.material = material
     }
     intersect(ray) {
         let dist = -(Vector.dot(ray.origin, this.normal)) / Vector.dot(ray.dir, this.normal)
