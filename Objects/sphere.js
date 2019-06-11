@@ -1,11 +1,12 @@
 import Vector from '../Vectors/vector.js'
 export default class Sphere {
-    constructor(pos, radius, color, surfaceType, albedo) {
+    constructor(pos, radius, color, surfaceType, albedo, material) {
         this.pos = pos
         this.radius = radius
         this.color = color
         this.surfaceType = surfaceType
         this.albedo = albedo
+        this.material = material
     }
     intersect(ray) {
         let O = ray.origin
