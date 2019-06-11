@@ -3,8 +3,6 @@ import Ray from './ray.js'
 import Sphere from '../Objects/sphere.js'
 import Plane from '../Objects/plane.js'
 
-const bias = 1e-6; // set to whatever
-
 export default class RayTracer {
     constructor(scene, canvas) {
         this.scene = scene;
@@ -49,6 +47,7 @@ export default class RayTracer {
         let intersectPoint = inter.intersectPoint
         let hitNormal = inter.hitNormal
         let surfaceType = inter.obj.surfaceType
+        let material = inter.obj.material
         let finalHitColor = new Vector(0, 0, 0)
         
         {
@@ -60,17 +59,23 @@ export default class RayTracer {
             let hitScalar = Vector.dot(reflectDir, lightDir)
             hitColor = Vector.add(hitColor, hitScalar > 0 ? Vector.multiply((hitScalar**20) * this.inShadow(intersectPoint, light, scene, inter.obj), light.color) : new Vector(0, 0, 0))
             })
-            finalHitColor=Vector.add(finalHitColor, hitColor)
+            finalHitColor=Vector.add(finalHitColor, hitColor*material.sS)
         }
-        if(surfaceType=='specular') {
+        {
             let hitColor = new Vector(0, 0, 0)
             let reflectDir = Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Vector.dot(hitNormal, inter.ray.dir), hitNormal)))
-            for(let i = 0; i < 50; i++) {
-            let reflectRay = new Ray(intersectPoint, Vector.norm(Vector.add(reflectDir, new Vector(Math.random()*0.3, Math.random()*0.3, Math.random()*0.3))))
+            if(material.mO == 0) {
+                let reflectRay = new Ray(intersectPoint, reflectDir)
+                hitColor = this.shootRay(reflectRay, scene, iter+1)
+            } else {
+            for(let i = 0; i < (material.mO*167); i++) {
+            if(hitColor.x == 0 && hitColor.y == 0 && hitColor.z == 0 && i >= 20) break
+            let reflectRay = new Ray(intersectPoint, Vector.norm(Vector.add(reflectDir, new Vector(Math.random()*material.mO, Math.random()*material.mO, Math.random()*material.mO))))
             hitColor = Vector.add(hitColor, this.shootRay(reflectRay, scene, iter+1))
             }
             hitColor = Vector.multiply(1/50, hitColor)
-            finalHitColor=Vector.add(finalHitColor, hitColor)
+            }
+            finalHitColor=Vector.add(finalHitColor, hitColor*material.mS)
         }
         {
             let albedo = inter.obj.albedo
@@ -84,7 +89,7 @@ export default class RayTracer {
                 Vector.multiplyVectors(color, light.color.fromRGB())
                 ))
             })
-            finalHitColor=Vector.add(finalHitColor, hitColor)
+            finalHitColor=Vector.add(finalHitColor, hitColor*material.dS)
         }
         return finalHitColor
     }
