@@ -21,35 +21,40 @@ var scene = new Scene(
             new Vector(0, 1, 0),
             new Vector(255, 255, 255),
             'diffuse',
-            0.18
+            0.18,
+            new Material(0.8, 0.3, 0.9, 0.0)
         ),
         new Sphere(
             new Vector(0, 1, -0.25),
             1.0,
             new Vector(30, 30, 30),
             'specular',
-            0.6
+            0.6,
+            new Material(0.8, 0.3, 0.9, 0.1)
         ),
         new Sphere(
             new Vector(0.5, 0.5, 2),
             0.5,
             new Vector(0, 230, 0),
             'diffuse',
-            0.6
+            0.6,
+            new Material(0.8, 0.3, 0.9, 0.0)
         ),
         new Sphere(
             new Vector(-2, 1.3, 2.25),
             0.5,
             new Vector(200, 122, 244),
             'diffuse',
-            0.6
+            0.6,
+            new Material(0.8, 0.3, 0.9, 0.0)
         ),
         new Sphere(
             new Vector(2, 1, -2.5),
             0.5,
             new Vector(0, 122, 244),
             'diffuse',
-            0.6
+            0.6,
+            new Material(0.8, 0.8, 0.9, 0.0)
         )
     ],
     [
