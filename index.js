@@ -26,19 +26,19 @@ var scene = new Scene(
         new Sphere(
             new Vector(0, 1, -0.25),
             1.0,
-            new Vector(147, 58, 22),
+            new Vector(30, 30, 30),
             'specular',
             0.6
         ),
         new Sphere(
-            new Vector(0.5, 1.5, 2),
+            new Vector(0.5, 0.5, 2),
             0.5,
-            new Vector(0, 255, 0),
+            new Vector(0, 230, 0),
             'diffuse',
             0.6
         ),
         new Sphere(
-            new Vector(0, 3, -0.25),
+            new Vector(-2, 1.3, 2.25),
             0.5,
             new Vector(200, 122, 244),
             'diffuse',
@@ -48,7 +48,7 @@ var scene = new Scene(
             new Vector(2, 1, -2.5),
             0.5,
             new Vector(0, 122, 244),
-            'specular',
+            'diffuse',
             0.6
         )
     ],

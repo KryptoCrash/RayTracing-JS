@@ -14,6 +14,7 @@ export default class RayTracer {
     render() {
         for(let y = 0; y < this.canvas.height; y++) {
             for(let x = 0; x < this.canvas.width; x++) {
+                
                 let pxColor = this.shootRay(
                     new Ray(this.camera.pos, this.getDir(x, y, this.camera)),
                     this.scene,
@@ -39,15 +40,39 @@ export default class RayTracer {
     }
     shootRay(ray, scene, iter) {
         let inter = this.checkForIntersect(ray, scene)
+        if(iter > 2) return new Vector(0, 0, 0)
         if(inter) {
-            return this.shade(ray, inter, scene)
+            return this.shade(ray, inter, scene, iter)
         } else return new Vector(0, 0, 0)
     }
-    shade(ray, inter, scene) {
+    shade(ray, inter, scene, iter) {
         let intersectPoint = inter.intersectPoint
         let hitNormal = inter.hitNormal
         let surfaceType = inter.obj.surfaceType
-        if(surfaceType == 'diffuse') {
+        let finalHitColor = new Vector(0, 0, 0)
+        
+        {
+            let hitColor = new Vector(0, 0, 0)
+            scene.lights.forEach(light => {
+            let lightDir = Vector.norm(Vector.subtract(light.pos, intersectPoint))
+            let reflectDir = Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Vector.dot(hitNormal, inter.ray.dir), hitNormal)))
+            let reflectRay = new Ray(intersectPoint, reflectDir)
+            let hitScalar = Vector.dot(reflectDir, lightDir)
+            hitColor = Vector.add(hitColor, hitScalar > 0 ? Vector.multiply((hitScalar**20) * this.inShadow(intersectPoint, light, scene, inter.obj), light.color) : new Vector(0, 0, 0))
+            })
+            finalHitColor=Vector.add(finalHitColor, hitColor)
+        }
+        if(surfaceType=='specular') {
+            let hitColor = new Vector(0, 0, 0)
+            let reflectDir = Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Vector.dot(hitNormal, inter.ray.dir), hitNormal)))
+            for(let i = 0; i < 50; i++) {
+            let reflectRay = new Ray(intersectPoint, Vector.norm(Vector.add(reflectDir, new Vector(Math.random()*0.3, Math.random()*0.3, Math.random()*0.3))))
+            hitColor = Vector.add(hitColor, this.shootRay(reflectRay, scene, iter+1))
+            }
+            hitColor = Vector.multiply(1/50, hitColor)
+            finalHitColor=Vector.add(finalHitColor, hitColor)
+        }
+        {
             let albedo = inter.obj.albedo
             let color = inter.obj.color
             let hitColor = new Vector(0, 0, 0)
@@ -59,24 +84,25 @@ export default class RayTracer {
                 Vector.multiplyVectors(color, light.color.fromRGB())
                 ))
             })
-            return hitColor
-        } else if(surfaceType == 'specular') {
-            let hitColor = new Vector(0, 0, 0)
-            let reflectDir = Vector.norm(Vector.subtract(inter.ray.dir, Vector.multiply(2 * Vector.dot(hitNormal, inter.ray.dir), hitNormal)))
-            let reflectRay = new Ray(intersectPoint, reflectDir)
-            hitColor = this.shootRay(reflectRay, scene, 0)
-            return hitColor
+            finalHitColor=Vector.add(finalHitColor, hitColor)
         }
+        return finalHitColor
     }
     inShadow(intersectPoint, light, scene, objI) {
-        let lightDir = light.dir || Vector.norm(Vector.subtract(light.pos, intersectPoint))
+        let shadowScalar = 0
+        for(let samples = 0; samples < 50; samples++) {
+        let lightMag = Vector.mag(Vector.subtract(light.pos, intersectPoint))
+        let lightDir = light.dir || Vector.norm(Vector.subtract(Vector.add(light.pos, new Vector(Math.random(), Math.random(), Math.random())), intersectPoint))
         let shadowRay = new Ray(intersectPoint, lightDir)
+        let intersectFound = false
         for(let i = 0; i < scene.objects.length; i++) {
             let obj = scene.objects[i]
             let isect = obj.intersect(shadowRay)
-            if(isect.dist > 0 && isect.dist != Infinity && obj != objI) return 0.2
+            if(isect.dist > 0 && isect.dist != Infinity && isect.dist <= lightMag && obj != objI) intersectFound = true
         }
-        return 1
+        intersectFound ? 0 : shadowScalar++
+    }
+    return shadowScalar/50
     }
     checkForIntersect(ray, scene) {
         let closestInter = undefined;
