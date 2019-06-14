@@ -11,6 +11,13 @@ export default class Vector {
             -this.z
         )
     }
+    abs() {
+        return new Vector(
+            Math.abs(this.x),
+            Math.abs(this.y),
+            Math.abs(this.z)
+        )
+    }
     fromRGB() {
         return new Vector(
             this.x / 255,

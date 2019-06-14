@@ -26,9 +26,9 @@ var scene = new Scene(
         new Sphere(
             new Vector(0, 1, -0.25),
             1.0,
-            new Vector(30, 30, 30),
+            new Vector(0, 0, 0),
             'specular',
-            0.6
+            0.7
         ),
         new Sphere(
             new Vector(0.5, 0.5, 2),
@@ -73,5 +73,6 @@ var scene = new Scene(
 )
 
 let rayTracer = new RayTracer(scene, canvas)
-
-rayTracer.render()
+let timer = Date.now()
+console.log(rayTracer.render())
+console.log((Date.now()-timer)/1000)
