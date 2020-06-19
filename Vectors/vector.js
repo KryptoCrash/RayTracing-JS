@@ -4,6 +4,27 @@ export default class Vector {
         this.y = y;
         this.z = z;
     }
+    neg() {
+        return new Vector(
+            -this.x,
+            -this.y,
+            -this.z
+        )
+    }
+    abs() {
+        return new Vector(
+            Math.abs(this.x),
+            Math.abs(this.y),
+            Math.abs(this.z)
+        )
+    }
+    fromRGB() {
+        return new Vector(
+            this.x / 255,
+            this.y / 255,
+            this.z / 255
+        )
+    }
     static add(v1, v2) {
         return new Vector(
             v1.x+v2.x,
@@ -35,6 +56,13 @@ export default class Vector {
     }
     static dot(v1, v2) {
         return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+    }
+    static multiplyVectors(v1, v2) {
+        return new Vector(
+            v1.x*v2.x,
+            v1.y*v2.y,
+            v1.z*v2.z
+        )
     }
     static cross(v1, v2) {
         return new Vector(

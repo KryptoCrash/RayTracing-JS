@@ -1,5 +1,5 @@
-var WIDTH = 640;
-var HEIGHT = 400;
+var WIDTH = 1300;
+var HEIGHT = 600;
 var c = document.getElementById("ctx")
 c.width = WIDTH
 c.height = HEIGHT
@@ -11,42 +11,58 @@ import Scene from './Scene/scene.js'
 import Camera from './Scene/camera.js'
 import Vector from './Vectors/vector.js'
 import Sphere from './Objects/sphere.js'
-import Plane from './Objects/plane.js';
-import PointLight from './Objects/light.js';
+import Plane from './Objects/plane.js'
+import Material from './Materials/material.js'
+import PointLight from './Objects/Light/pointlight.js'
+import DirLight from './Objects/Light/directionallight.js'
 var scene = new Scene(
     [
         new Plane(
             new Vector(0, 1, 0),
-            new Vector(255, 255, 255)
+            new Vector(255, 255, 255),
+            'diffuse',
+            0.18
         ),
         new Sphere(
             new Vector(0, 1, -0.25),
-            1.2,
-            new Vector(255, 0, 0)
+            1.0,
+            new Vector(0, 0, 0),
+            'specular',
+            0.7
         ),
         new Sphere(
-            new Vector(0, 2.8, 0.25),
+            new Vector(0.5, 0.5, 2),
             0.5,
-            new Vector(255, 255, 0)
-        ),
-		new Sphere(
-            new Vector(0.5, 1.8, 2),
-            0.25,
-            new Vector(0, 0, 255)
-        ),
-		new Sphere(
-            new Vector(0.5, 2.2, 2),
-            0.1,
-            new Vector(0, 255, 255)
+            new Vector(0, 230, 0),
+            'diffuse',
+            0.6
         ),
         new Sphere(
-            new Vector(0.5, 1, 2),
+            new Vector(-2, 1.3, 2.25),
             0.5,
-            new Vector(0, 255, 0)
+            new Vector(200, 122, 244),
+            'diffuse',
+            0.6
+        ),
+        new Sphere(
+            new Vector(2, 1, -2.5),
+            0.5,
+            new Vector(0, 122, 244),
+            'diffuse',
+            0.6
         )
     ],
     [
-		new PointLight(new Vector(0,12,0))
+        new PointLight(
+            new Vector(3, 6, 8),
+            6,
+            new Vector(255, 234, 170)
+        ),
+        new PointLight(
+            new Vector(0, 6, -8),
+            6,
+            new Vector(230, 230, 255)
+        )
     ],
     new Camera(
         new Vector(3, 2, 4),
@@ -57,5 +73,6 @@ var scene = new Scene(
 )
 
 let rayTracer = new RayTracer(scene, canvas)
-
-rayTracer.render()
+let timer = Date.now()
+console.log(rayTracer.render())
+console.log((Date.now()-timer)/1000)
