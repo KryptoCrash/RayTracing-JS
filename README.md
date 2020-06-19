@@ -1,2 +1,2 @@
 # RayTracing-JS
-A Shitty RayTracer in JS!
+A Slow RayTracer in JS!
