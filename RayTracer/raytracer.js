@@ -173,6 +173,17 @@ export default class RayTracer {
     }
     return shadowScalar/50
     }
+    brightness(pos,scene) {
+        var brightness=0.2;
+        for (var i in scene.lights) {
+            var lightpos=scene.lights[i].pos
+            if (this.isLit(
+                new Ray(Vector.add(pos,
+                    Vector.multiply(1e-10,Vector.norm(Vector.subtract(lightpos, pos)))), // add bias
+                    Vector.norm(Vector.subtract(lightpos,pos))), scene)) brightness+=0.4;
+        }
+        return brightness;
+    }
     checkForIntersect(ray, scene) {
         let closestInter = undefined;
         let closestDist = Infinity;
@@ -185,5 +196,15 @@ export default class RayTracer {
         });
         
         return closestInter
+    }
+    
+    isLit(ray, scene) { // ray pointing to light
+        for (var i in scene.objects) {
+            let object = scene.objects[i]
+            if (object instanceof Sphere) {
+                if (Vector.mag(Vector.subtract(object.pos,ray.origin))<object.radius) return false
+            }
+        }
+        return typeof this.checkForIntersect(ray,scene)==="undefined"
     }
 }
